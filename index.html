@@ -115,7 +115,39 @@
       border: 1px solid rgba(0,229,160,0.12);
       aspect-ratio: 4/5; background: rgba(0,229,160,0.04);
     }
-    .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .card-img img:active { transform: scale(0.97); }
+
+    /* LIGHTBOX */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.93);
+      z-index: 9000;
+      align-items: center; justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 92vw; max-height: 88vh;
+      object-fit: contain;
+      border-radius: 12px;
+      cursor: default;
+    }
+    #lightbox-close {
+      position: fixed; top: 18px; right: 20px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; font-size: 1.3rem;
+      width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: 0.2s;
+    }
+    #lightbox-close:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
 
     /* LETTER */
     .letter-wrap {
@@ -164,6 +196,12 @@
 
 <audio id="player" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLB(event)">
+  <button id="lightbox-close" onclick="closeLB()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <div id="app" style="opacity:0; transition:1s;">
   <nav>
     <a onclick="go('home')" id="t-home" class="active">Басты</a>
@@ -183,12 +221,12 @@
   <section id="gallery">
     <h1>Күнделік өміріміз 📸</h1>
     <div class="grid">
-      <div class="card-img"><img src="1.jpg" alt=""></div>
-      <div class="card-img"><img src="2.jpg" alt=""></div>
-      <div class="card-img"><img src="3.jpg" alt=""></div>
-      <div class="card-img"><img src="4.jpg" alt=""></div>
-      <div class="card-img"><img src="5.jpg" alt=""></div>
-      <div class="card-img"><img src="6.jpg" alt=""></div>
+      <div class="card-img"><img src="1.jpg" onclick="openLB('1.jpg')" alt=""></div>
+      <div class="card-img"><img src="2.jpg" onclick="openLB('2.jpg')" alt=""></div>
+      <div class="card-img"><img src="3.jpg" onclick="openLB('3.jpg')" alt=""></div>
+      <div class="card-img"><img src="4.jpg" onclick="openLB('4.jpg')" alt=""></div>
+      <div class="card-img"><img src="5.jpg" onclick="openLB('5.jpg')" alt=""></div>
+      <div class="card-img"><img src="6.jpg" onclick="openLB('6.jpg')" alt=""></div>
     </div>
     <button class="btn" onclick="go('letter')">Манифестті оқу</button>
   </section>
@@ -232,6 +270,18 @@
     document.getElementById(id).classList.add('active');
     document.getElementById('t-' + id).classList.add('active');
     window.scrollTo(0, 0);
+  }
+
+  function openLB(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLB(e) {
+    if (e && e.target === document.getElementById('lightbox-img')) return;
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = 'auto';
   }
 
   const facts = [
